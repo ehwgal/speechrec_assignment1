@@ -55,14 +55,18 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     print("----------------------------")
 
 
-def autocorrelation(inp, y_frame_s):
-    pass
-    # 1
-    autocorr = plt.acorr(inp, usevlines=False, maxlags= y_frame_s.shape[0]-1)
+def autocorrelation(inp, lags, order=""):
+    """
+    Plot autocorrelation
+
+    :param ...
+    """
+    autocorr = plt.acorr(inp, usevlines=False, maxlags= lags-1)
     plt.close()
     lags, acs = autocorr[0], autocorr[1]
     plt.plot(lags, acs)
-    plt.savefig(...)
+    str_inp = str(inp)
+    plt.savefig(f"./output/autocorrelation_{str_inp}_{order}.png")
     plt.close()
 
 def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, orders=None):
@@ -90,8 +94,8 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
     f = np.linspace(-(target_sr//2), (target_sr//2), y_frame_s.shape[0])
 
     plt.plot(f, y_mag_spec_final, color='k')
-    plt.ylabel("Magnitude")
-    plt.xlabel("Frequency")
+    plt.ylabel("Magnitude (dB)")
+    plt.xlabel("Frequency (Hz)")
     if lpc_envelope:
         for order in orders:
             a = librosa.lpc(y_frame_s, order=order)
@@ -101,6 +105,9 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
             est_y_frame_s = lfilter(numerator, 1, y_frame_s) 
             e = y_frame_s - est_y_frame_s
             g = math.sqrt(sum(np.square(e)))
+
+            autocorrelation(e, y_frame_s.shape[0], order=order)
+            autocorrelation(y_frame_s, y_frame_s.shape[0], order=order)
 
             h = freqz(g, a, f, fs=target_sr)
             plt.plot(f, y_mag_spec_final)
