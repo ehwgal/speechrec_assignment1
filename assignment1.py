@@ -1,5 +1,5 @@
 """
-This script is based on code by Shekhar Nayak, Campus Fryslân, University of Groningen.
+This script is based on the MatLab code by Shekhar Nayak, Campus Fryslân, University of Groningen.
 
 Run in command line with optional parameters 'orig_sr', 'target_sr' and/or 'model_orders'.
 Examples:
@@ -63,8 +63,10 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
     :param str letter: the specific ortographic letter that is pronounced
     :param bool lpc_envelope: boolean for whether or not to plot the LPC envelope
     """
+    # get 25ms of audio
     sound_middle = len(audio)//2
     frame_samples_n = target_sr//40
+    # take the samples for the frame from the middle
     y_frame_s = audio[sound_middle:sound_middle+frame_samples_n]
 
     y_mag_spec = 20*np.log10(abs(np.fft.fft(y_frame_s)))
@@ -77,7 +79,7 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
     plt.xlabel("Frequency")
     if lpc_envelope:
         for order in orders:
-            a = librosa.core.lpc(y_frame_s, order=order)
+            a = librosa.lpc(y_frame_s, order=order)
             # create numerator coefficient (equivalent of [0 -a(2:end)] in MatLab)
             start_num = [0]
             remaining_num = [-(i) for i in a[1:]]
@@ -91,8 +93,9 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
             plt.plot(f, y_mag_spec_final)
             plt.plot(f, 20*np.log10(abs(h[1])), label=f"LPC order {order}", alpha=1)
             plt.legend()
-        plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
-        plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}.png")
+            plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
+            plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}_order{order}.png")
+            plt.close()
     else:
         plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit}")
         plt.savefig(f"./output/spectra/spectrum_{digit}_{voicing}_{letter}.png")
