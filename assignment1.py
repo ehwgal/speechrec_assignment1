@@ -39,7 +39,7 @@ def plot_waveform(digit, audio, target_sr):
 
 def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     """
-    Print pitch and fundamental frequency of audio, see terminal for results
+    Print pitch period and fundamental frequency of audio, see terminal for results
 
     :param list audio: list of frequencies
     :param str digit: digit that is pronounced in the audio
