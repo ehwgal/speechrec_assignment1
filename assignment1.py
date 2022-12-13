@@ -8,7 +8,7 @@ $ python assignment1.py
 $ python assignment1.py --orig_sr 22050
 $ python assignment1.py --orig_sr 22050 --target_sr 4000
 $ python assignment1.py --orig_sr 22050 --target_sr 4000 --model_orders 8 10 12
-$ python assignment1.py --model_orders 4 10 16
+$ python assignment1.py --model_orders 4 8 16 32 
 
 See the output folder and the terminal for the results.
 """
@@ -54,6 +54,17 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     print(f"pitch period: {1/f0}")
     print("----------------------------")
 
+
+def autocorrelation(inp, y_frame_s):
+    pass
+    # 1
+    autocorr = plt.acorr(inp, usevlines=False, maxlags= y_frame_s.shape[0]-1)
+    plt.close()
+    lags, acs = autocorr[0], autocorr[1]
+    plt.plot(lags, acs)
+    plt.savefig(...)
+    plt.close()
+
 def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, orders=None):
     """
     Plots magnitude spectrum of audio (with or without LPC envelope), see ./output/spectra and
@@ -67,8 +78,9 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
     :param bool lpc_envelope: boolean for whether or not to plot the LPC envelope
     :param list orders: model orders that need to be plotted
     """
-    # get 25ms of audio
+    # get middle of audio
     sound_middle = len(audio)//2
+    # one second contains 40 frames of 25ms, i.e. sr should be divided by 40
     frame_samples_n = target_sr//40
     # take the samples for the frame from the middle
     y_frame_s = audio[sound_middle:sound_middle+frame_samples_n]
@@ -84,9 +96,7 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
         for order in orders:
             a = librosa.lpc(y_frame_s, order=order)
             # create numerator coefficient (equivalent of [0 -a(2:end)] in MatLab)
-            start_num = [0]
-            remaining_num = [-(i) for i in a[1:]]
-            numerator = np.concatenate([start_num, remaining_num])
+            numerator = np.concatenate([[0], [-(i) for i in a[1:]]])
 
             est_y_frame_s = lfilter(numerator, 1, y_frame_s) 
             e = y_frame_s - est_y_frame_s
@@ -137,7 +147,7 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--orig_sr', default=22050, type=int)
     argparser.add_argument('--target_sr', default=8000, type=int)
-    argparser.add_argument('--model_orders', '--arg', nargs='+', type=int, default=[2, 12, 22])
+    argparser.add_argument('--model_orders', '--arg', nargs='+', type=int, default=[12])
     args = argparser.parse_args()
 
     main(
