@@ -9,6 +9,8 @@ $ python assignment1.py --orig_sr 22050
 $ python assignment1.py --orig_sr 22050 --target_sr 4000
 $ python assignment1.py --orig_sr 22050 --target_sr 4000 --model_orders 8 10 12
 $ python assignment1.py --model_orders 4 10 16
+
+See the output folder and the terminal for the results.
 """
 import argparse
 import librosa
