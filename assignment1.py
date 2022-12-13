@@ -112,8 +112,8 @@ def main(orig_sr, target_sr, model_orders):
     data_dir = Path("recordings")
 
     for filepath in data_dir.glob('[0-9]*.wav'):
-        # downsample audiofile to target_sr
         y, _ = librosa.load(filepath, sr=orig_sr)
+        # downsample audiofile to target_sr
         downsampled_y = librosa.resample(y, orig_sr=orig_sr, target_sr=target_sr)
 
         basename = os.path.basename(filepath)
@@ -121,12 +121,15 @@ def main(orig_sr, target_sr, model_orders):
         # voiced and unvoiced regions of audiofiles
         if len(basename.split("_")) == 3:
             digit, voicing, letter = basename.replace(".wav", "").split("_")
+            # print pitch period and f0 of voiced regions
             if voicing == "voiced":
                 calculate_pitchperiod_and_f0(y, digit, voicing, letter)
+            # plot magnitude spectrum for all 4 regions
             plot_spectrum(downsampled_y, target_sr, digit, voicing, letter)
+            # plot magnitude spectrum with lpc envelope (various model orders) for all 4 regions
             plot_spectrum(downsampled_y, target_sr, digit, voicing, letter, lpc_envelope=True, orders=model_orders)
 
-        # complete audiofiles
+        # plot waveforms of complete audiofiles
         else:
             digit = basename.replace(".wav", "")
             plot_waveform(digit, y, target_sr)
