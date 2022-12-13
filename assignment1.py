@@ -55,7 +55,7 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     print("----------------------------")
 
 
-def autocorrelation(inp, lags, order=""):
+def autocorrelation(inp, lags, order="", title=""):
     """
     Plot autocorrelation
 
@@ -66,7 +66,7 @@ def autocorrelation(inp, lags, order=""):
     lags, acs = autocorr[0], autocorr[1]
     plt.plot(lags, acs)
     str_inp = str(inp)
-    plt.savefig(f"./output/autocorrelation_{str_inp}_{order}.png")
+    plt.savefig(f"./output/autocorrelation/autocorrelation_{order}_{title}.png")
     plt.close()
 
 def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, orders=None):
@@ -106,8 +106,8 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
             e = y_frame_s - est_y_frame_s
             g = math.sqrt(sum(np.square(e)))
 
-            autocorrelation(e, y_frame_s.shape[0], order=order)
-            autocorrelation(y_frame_s, y_frame_s.shape[0], order=order)
+            autocorrelation(e, y_frame_s.shape[0], order=order, title="error")
+            autocorrelation(y_frame_s, y_frame_s.shape[0], order=order, title="frame")
 
             h = freqz(g, a, f, fs=target_sr)
             plt.plot(f, y_mag_spec_final)
