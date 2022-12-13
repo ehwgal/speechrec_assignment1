@@ -51,7 +51,7 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     print(f"pitch period: {1/f0}")
     print("----------------------------")
 
-def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, orders=None):
+def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, orders=None, individual=False):
     """
     Plots magnitude spectrum of audio (with or without LPC envelope), see ./output/spectra and
     ./output/spectra_with_lpc for results
@@ -62,6 +62,8 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
     :param str voicing: voiced or voiceless
     :param str letter: the specific ortographic letter that is pronounced
     :param bool lpc_envelope: boolean for whether or not to plot the LPC envelope
+    :param list orders: model orders that need to be plotted
+    :param bool individual: boolean whether to plot all orders together or not
     """
     # get 25ms of audio
     sound_middle = len(audio)//2
@@ -93,9 +95,14 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
             plt.plot(f, y_mag_spec_final)
             plt.plot(f, 20*np.log10(abs(h[1])), label=f"LPC order {order}", alpha=1)
             plt.legend()
-            plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
-            plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}_order{order}.png")
-            plt.close()
+            # in case one wants to plot all orders individually instead of together on one plot
+            if individual:
+                plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
+                plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}_order{order}.png")
+                plt.close()
+                break
+        plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
+        plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}.png")        
     else:
         plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit}")
         plt.savefig(f"./output/spectra/spectrum_{digit}_{voicing}_{letter}.png")
