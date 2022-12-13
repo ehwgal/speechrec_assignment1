@@ -41,7 +41,6 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     """
     Print pitch and fundamental frequency of audio, see terminal for results
 
-    :param str filepath: path to the .wav file
     :param list audio: list of frequencies
     :param str digit: digit that is pronounced in the audio
     :param str voicing: voiced or voiceless
@@ -49,7 +48,7 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     """
     f0_list = librosa.yin(audio, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'), frame_length = 1024)
     f0 = np.average(f0_list)
-    print(f"Pitch and F0 for {voicing} {letter} in digit {digit}:\n")
+    print(f"Pitch period and F0 for {voicing} {letter} in digit {digit}:\n")
     print(f"fundamental freq: {f0}")
     print(f"pitch period: {1/f0}")
     print("----------------------------")
