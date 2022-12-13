@@ -17,8 +17,6 @@ import math
 import numpy as np
 import os
 from pathlib import Path
-import re
-import scipy
 from scipy.signal import lfilter, freqz
 
 def plot_waveform(digit, audio, target_sr):
