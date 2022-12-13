@@ -78,7 +78,6 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
     y_mag_spec_final=np.fft.fftshift(y_mag_spec)
     f = np.linspace(-(target_sr//2), (target_sr//2), y_frame_s.shape[0])
 
-
     plt.plot(f, y_mag_spec_final, color='k')
     plt.ylabel("Magnitude")
     plt.xlabel("Frequency")
@@ -98,14 +97,10 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
             plt.plot(f, y_mag_spec_final)
             plt.plot(f, 20*np.log10(abs(h[1])), label=f"LPC order {order}", alpha=1)
             plt.legend()
-            # in case one wants to plot all orders individually instead of together on one plot
-            if individual:
-                plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
-                plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}_order{order}.png")
-                plt.close()
-                break
+
         plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
-        plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}.png")        
+        plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}.png") 
+
     # else plot magnitude spectrum without lpc envelope
     else:
         plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit}")
