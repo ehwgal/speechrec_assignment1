@@ -55,17 +55,20 @@ def calculate_pitchperiod_and_f0(audio, digit, voicing, letter):
     print("----------------------------")
 
 
-def autocorrelation(inp, lags, order="", title=""):
+def autocorrelation(inp, lags, order=None, title=""):
     """
     Plot autocorrelation
 
-    :param ...
+    :param array inp: input array for which to compute the autocorrelation
+    :param int lags: nr of lags
+    :param int order: model order
+    :param str title: title of plot
     """
     autocorr = plt.acorr(inp, usevlines=False, maxlags= lags-1)
     plt.close()
     lags, acs = autocorr[0], autocorr[1]
     plt.plot(lags, acs)
-    str_inp = str(inp)
+    plt.title(f"Autocorrelation computed over {title}")
     plt.savefig(f"./output/autocorrelation/autocorrelation_{order}_{title}.png")
     plt.close()
 
