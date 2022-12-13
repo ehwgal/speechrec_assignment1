@@ -1,7 +1,8 @@
 """
 This script is based on the MatLab code by Shekhar Nayak, Campus Fryslân, University of Groningen.
 
-Run in command line with optional parameters 'orig_sr', 'target_sr' and/or 'model_orders'.
+Run in command line with optional parameters 'orig_sr', 'target_sr' and/or 'model_orders'
+(see bottom of file for default values of these parameters).
 Examples:
 $ python assignment1.py
 $ python assignment1.py --orig_sr 22050
@@ -103,6 +104,7 @@ def plot_spectrum(audio, target_sr, digit, voicing, letter, lpc_envelope=False, 
                 break
         plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit} with LPC envelope")
         plt.savefig(f"./output/spectra_with_lpc/spectrum_{digit}_{voicing}_{letter}.png")        
+    # else plot magnitude spectrum without lpc envelope
     else:
         plt.title(f"Magnitude spectrum for {voicing} '{letter}' in digit {digit}")
         plt.savefig(f"./output/spectra/spectrum_{digit}_{voicing}_{letter}.png")
@@ -136,7 +138,7 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--orig_sr', default=22050, type=int)
     argparser.add_argument('--target_sr', default=8000, type=int)
-    argparser.add_argument('--model_orders', '--arg', nargs='+', type=int, default=[12])
+    argparser.add_argument('--model_orders', '--arg', nargs='+', type=int, default=[2, 12, 22])
     args = argparser.parse_args()
 
     main(
